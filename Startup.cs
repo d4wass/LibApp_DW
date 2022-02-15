@@ -40,6 +40,8 @@ namespace LibApp
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IGenresRepository, GenresRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IMembershipRepository, MembershipTypeRepository>();
             services.AddControllersWithViews();
         }
 

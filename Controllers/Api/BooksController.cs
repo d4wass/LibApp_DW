@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace LibApp.Controllers.Api
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    // [Route("api/[controller]")]
+    // [ApiController]
     public class BooksController : ControllerBase
     {
         public BooksController(ApplicationDbContext context, IMapper mapper)
@@ -22,7 +22,7 @@ namespace LibApp.Controllers.Api
         }
 
         // GET api/books/
-        [HttpGet]
+        // [HttpGet]
         public IEnumerable<BookDto> GetBooks(string query = null)
         {
             var booksQuery = _context.Books.Where(b => b.NumberAvailable > 0);

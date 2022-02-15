@@ -24,8 +24,8 @@
 </table>
 
 
-@section Scripts 
-{ 
+@section Scripts
+{
     <script>
         $(document).ready(function () {
             $("#customers").DataTable({
@@ -37,8 +37,9 @@
                     {
                         data: "name",
                         render: function (data, type, customer) {
-                            return "<a href='customers/edit/" + customer.id + "'>" + customer.name + "</a>";
-                        }
+                            // const anchor = <a asp-controller="Customer" asp-action="Details" asp-route-id="customer.id">customer.name</a>
+                            return `<a href="customers/details/${customer.id}">${customer.name}</a>`;
+                        },
                     },
                     {
                         data: "membershipType.name"

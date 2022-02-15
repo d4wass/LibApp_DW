@@ -3,14 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LibApp.Models;
 using LibApp.ViewModels;
 using LibApp.Data;
 using LibApp.Interfaces;
+using LibApp.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibApp.Controllers
 {
+  
     public class BooksController : Controller
     {
         private readonly IBookRepository _bookRepository;
@@ -21,7 +24,7 @@ namespace LibApp.Controllers
             _bookRepository = bookRepository;
             _genresRepository = genresRepository;
         }
-
+        
         public IActionResult Index()
         {
             var books = _bookRepository.GetBooksIncludeGenres();
@@ -65,36 +68,6 @@ namespace LibApp.Controllers
 
             return View("BookForm", viewModel);
         }
-
-        [HttpPost]
-        public IActionResult Save(Book book)
-        {
-            if (book.Id == 0)
-            {
-                book.DateAdded = DateTime.Now;
-                _bookRepository.AddBook(book);
-            }
-            else
-            {
-                var bookInDb = _bookRepository.GetBooks().Single(c => c.Id == book.Id);
-                bookInDb.Name = book.Name;
-                bookInDb.AuthorName = book.AuthorName;
-                bookInDb.GenreId = book.GenreId;
-                bookInDb.ReleaseDate = book.ReleaseDate;
-                bookInDb.DateAdded = book.DateAdded;
-                bookInDb.NumberInStock = book.NumberInStock;
-            }
-
-            try
-            {
-                _bookRepository.Save();
-            }
-            catch (DbUpdateException e)
-            {
-                Console.WriteLine(e);
-            }
-
-            return RedirectToAction("Index", "Books");
-        }
+        
     }
 }
