@@ -8,11 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibApp.Controllers.Api
 {
-    // [Route("api/[controller]")]
-    // [ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
     public class BooksController : ControllerBase
     {
         public BooksController(ApplicationDbContext context, IMapper mapper)
@@ -21,19 +22,26 @@ namespace LibApp.Controllers.Api
             _mapper = mapper;
         }
 
+        [HttpGet]
+        public IActionResult GetBooks()
+        {
+            var books = _context.Books.Include(b => b.Genre);
+            return Ok(books);
+        }
+        
         // GET api/books/
         // [HttpGet]
-        public IEnumerable<BookDto> GetBooks(string query = null)
-        {
-            var booksQuery = _context.Books.Where(b => b.NumberAvailable > 0);
-
-            if (!String.IsNullOrWhiteSpace(query))
-            {
-                booksQuery = booksQuery.Where(b => b.Name.Contains(query));
-            }
-
-            return booksQuery.ToList().Select(_mapper.Map<Book, BookDto>);
-        }
+        // public IEnumerable<BookDto> GetBooks(string query = null)
+        // {
+        //     var booksQuery = _context.Books.Where(b => b.NumberAvailable > 0);
+        //
+        //     if (!String.IsNullOrWhiteSpace(query))
+        //     {
+        //         booksQuery = booksQuery.Where(b => b.Name.Contains(query));
+        //     }
+        //
+        //     return booksQuery.ToList().Select(_mapper.Map<Book, BookDto>);
+        // }
 
 
         private readonly IMapper _mapper;

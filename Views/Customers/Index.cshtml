@@ -1,3 +1,5 @@
+@model IEnumerable<LibApp.Models.Customer>
+
 @{
     ViewBag.Title = "Customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -19,7 +21,7 @@
         </tr>
     </thead>
     <tbody>
-            
+        
     </tbody>
 </table>
 
@@ -37,8 +39,7 @@
                     {
                         data: "name",
                         render: function (data, type, customer) {
-                            // const anchor = <a asp-controller="Customer" asp-action="Details" asp-route-id="customer.id">customer.name</a>
-                            return `<a href="customers/details/${customer.id}">${customer.name}</a>`;
+                            return `<a href="customers/edit/${customer.id}">${customer.name}</a>`;
                         },
                     },
                     {

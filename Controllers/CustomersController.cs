@@ -22,7 +22,6 @@ namespace LibApp.Controllers
             return View();
         }
         
-        // [HttpGet("details/{id:int}")]
         public IActionResult Details(int id)
         {
             var customer = _customerRepository.GetCustomersIncludeMembershipType()
