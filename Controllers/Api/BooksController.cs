@@ -1,14 +1,18 @@
 ﻿using AutoMapper;
-using LibApp.Data;
 using LibApp.Dtos;
 using LibApp.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using System.Web.Http;
+using LibApp.Interfaces;
+using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace LibApp.Controllers.Api
 {
@@ -16,35 +20,87 @@ namespace LibApp.Controllers.Api
     [ApiController]
     public class BooksController : ControllerBase
     {
-        public BooksController(ApplicationDbContext context, IMapper mapper)
+        public BooksController(IBookRepository bookRepository, IMapper mapper)
         {
-            _context = context;
+            _bookRepository = bookRepository;
             _mapper = mapper;
-        }
-
-        [HttpGet]
-        public IActionResult GetBooks()
-        {
-            var books = _context.Books.Include(b => b.Genre);
-            return Ok(books);
         }
         
         // GET api/books/
-        // [HttpGet]
-        // public IEnumerable<BookDto> GetBooks(string query = null)
-        // {
-        //     var booksQuery = _context.Books.Where(b => b.NumberAvailable > 0);
-        //
-        //     if (!String.IsNullOrWhiteSpace(query))
-        //     {
-        //         booksQuery = booksQuery.Where(b => b.Name.Contains(query));
-        //     }
-        //
-        //     return booksQuery.ToList().Select(_mapper.Map<Book, BookDto>);
-        // }
+        [HttpGet]
+        public IActionResult GetBooks()
+        {
+            var books = _bookRepository.GetBooksIncludeGenres()
+                                .ToList()
+                                .Select(_mapper.Map<Book, BookDto>);
 
+            return Ok(books);
+        }
 
+        //GET /api/books/{id}
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetCustomer(int id)
+        {
+            var book = _bookRepository.GetBooksIncludeGenres().SingleOrDefault(b => b.Id == id)!;
+            await Task.Delay(2000);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<BookDto>(book));
+        }
+        
+        //POST /api/books/{id}
+        [HttpPost]
+        public BookDto CreateBook(BookDto bookDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            var book = _mapper.Map<Book>(bookDto);
+            _bookRepository.AddBook(book);
+            _bookRepository.Save();
+            bookDto.Id = book.Id;
+
+            return bookDto;
+        }
+        
+        //PUT /api/books/{id}
+        [HttpPut("{id:int}")]
+        public void UpdateBook(int id, BookDto bookDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            var bookInDb = _bookRepository.GetBookById(id);
+            if (bookDto == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            _mapper.Map(bookDto, bookInDb);
+            _bookRepository.Save();
+        }
+
+        [HttpDelete("{id:int}")]
+        public void DeleteBook(int id)
+        {
+            var bookInDb = _bookRepository.GetBookById(id);
+            if (bookInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            
+            _bookRepository.DeleteBook(bookInDb);
+            _bookRepository.Save();
+        }
+        
         private readonly IMapper _mapper;
-        private readonly ApplicationDbContext _context;
+        private readonly IBookRepository _bookRepository;
     }
 }

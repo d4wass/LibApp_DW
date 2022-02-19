@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using LibApp.ViewModels;
@@ -67,6 +69,7 @@ namespace LibApp.Controllers
         }
         
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Save(Book book)
         {
             if (book.Id == 0)
@@ -96,6 +99,7 @@ namespace LibApp.Controllers
 
             return RedirectToAction("Index", "Books");
         }
-        
+
+   
     }
 }
