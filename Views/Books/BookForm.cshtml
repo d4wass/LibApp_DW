@@ -9,8 +9,8 @@
 
 @using (Html.BeginForm("Save", "Books"))
 {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary();
+    
+    @Html.ValidationSummary(true);
     <div class="form-group">
         @Html.LabelFor(m => m.Book.Name)
         @Html.TextBoxFor(m => m.Book.Name, new { @class = "form-control" })
@@ -37,7 +37,12 @@
         @Html.ValidationMessageFor(m => m.Book.NumberInStock)
     </div>
     
-
+    @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Book.Id)
     <button type="submit" class="btn btn-primary">Save</button>
 }
+
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+} 
