@@ -1,5 +1,3 @@
-@model IEnumerable<LibApp.Models.Customer>
-
 @{
     ViewBag.Title = "Customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -39,7 +37,7 @@
                     {
                         data: "name",
                         render: function (data, type, customer) {
-                            return `<a href="customers/edit/${customer.id}">${customer.name}</a>`;
+                            return `<a href="customers/details/${customer.id}">${customer.name}</a>`;
                         },
                     },
                     {

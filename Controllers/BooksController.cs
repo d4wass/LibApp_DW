@@ -26,9 +26,7 @@ namespace LibApp.Controllers
         
         public IActionResult Index()
         {
-            var books = _bookRepository.GetBooksIncludeGenres();
-        
-            return View(books);
+            return View();
         }
 
         public IActionResult Details(int id)

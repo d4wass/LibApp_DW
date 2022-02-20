@@ -35,6 +35,7 @@ namespace LibApp.Controllers
             return View(customer);
         }
 
+        
         public IActionResult New()
         {
             var membershipTypes = _membershipRepository.GetMembershipTypes().ToList();
@@ -45,6 +46,7 @@ namespace LibApp.Controllers
 
             return View("CustomerForm", viewModel);
         }
+        
 
         public IActionResult Edit(int id)
         {

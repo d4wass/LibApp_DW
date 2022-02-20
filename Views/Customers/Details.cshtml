@@ -21,7 +21,7 @@
 
 @if (User.IsInRole("Administrator"))
 {
-    <button class="btn btn-primary" id="edit" data-customer-id="@Model.Id">Edit</button>
+    <button class="btn btn-primary js-edit" id="edit" data-customer-id="@Model.Id">Edit</button>
 }
 
 
@@ -31,9 +31,9 @@
 
     <script>
         $(document).ready(function () {
-            const clickHandle = $("#edit").click(function (event) {
-                const btn = $(this)  
-                document.location.href = document.location.origin + "customers/edit/" + btn.attr("data-customer-id")
+            $("#edit").click(function (event) {
+                const id = event.target.dataset.customerId;
+                window.location.pathname = "customers/edit/" + id
             })
         })
     </script>

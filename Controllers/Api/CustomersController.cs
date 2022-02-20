@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
@@ -54,6 +55,16 @@ namespace LibApp.Controllers.Api
             return Ok(_mapper.Map<CustomerDto>(customer));
         }
 
+
+        [HttpGet("details/{id:int}")]
+        public IActionResult GetCustomerDetail(int id)
+        {
+            var customer = _context.Customers
+                .Include(c => c.MembershipType)
+                .SingleOrDefault(c => c.Id == id);
+            return Ok(customer);
+        }
+        
         // POST /api/customers
         [HttpPost]
         public CustomerDto CreateCustomer(CustomerDto customerDto)
