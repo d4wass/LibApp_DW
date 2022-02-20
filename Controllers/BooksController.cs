@@ -6,6 +6,7 @@ using System.Linq;
 using LibApp.ViewModels;
 using LibApp.Interfaces;
 using LibApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -28,7 +29,7 @@ namespace LibApp.Controllers
         {
             return View();
         }
-
+        
         public IActionResult Details(int id)
         {
             var book = _bookRepository.GetBooksIncludeGenres()
@@ -36,7 +37,7 @@ namespace LibApp.Controllers
 
             return View(book);
         }
-
+        [Authorize(Roles = "Owner,StoreManager")]
         public IActionResult Edit(int id)
         {
             var book = _bookRepository.GetBooks().SingleOrDefault(b => b.Id == id);

@@ -9,6 +9,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
@@ -16,8 +18,10 @@ using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
+
 namespace LibApp.Controllers.Api
 {
+    [AuthorizeAttribute.Authorize(Roles = "Owner,StoreManager")]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
@@ -30,6 +34,7 @@ namespace LibApp.Controllers.Api
 
         // GET /api/customers
         [HttpGet]
+        [AuthorizeAttribute.Authorize]
         public IActionResult GetCustomers()
         {
             var customers = _context.Customers

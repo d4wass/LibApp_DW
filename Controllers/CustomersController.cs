@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Web.Http;
 using LibApp.Models;
 using LibApp.ViewModels;
 using LibApp.Interfaces;
 
 namespace LibApp.Controllers
 {
+    [Authorize(Roles = "Owner,StoreManager")]
     public class CustomersController : Controller
     {
         private readonly ICustomerRepository _customerRepository;
@@ -16,7 +18,8 @@ namespace LibApp.Controllers
             _customerRepository = customerRepository;
             _membershipRepository = membershipRepository;
         }
-
+        
+        [Authorize(Roles = "Owner,StoreManager")]
         public ViewResult Index()
         {          
             return View();
@@ -35,7 +38,7 @@ namespace LibApp.Controllers
             return View(customer);
         }
 
-        
+        [Authorize(Roles = "Owner")]
         public IActionResult New()
         {
             var membershipTypes = _membershipRepository.GetMembershipTypes().ToList();
@@ -47,7 +50,7 @@ namespace LibApp.Controllers
             return View("CustomerForm", viewModel);
         }
         
-
+        [Authorize(Roles = "Owner")]
         public IActionResult Edit(int id)
         {
             var customer = _customerRepository.GetCustomers().SingleOrDefault(c => c.Id == id);
@@ -64,8 +67,9 @@ namespace LibApp.Controllers
             return View("CustomerForm", viewModel);
         }
 
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Owner")]
         public IActionResult Save(Customer customer)
         {
             if (!ModelState.IsValid)
