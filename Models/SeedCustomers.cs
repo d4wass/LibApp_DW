@@ -21,11 +21,24 @@ public static class SeedCustomers
             context.Customers.AddRange(
                 new Customer
                 {
-                    Id = 1,
-                    Name = "Roman",
                     Birthdate = DateTime.Now.AddYears(-25),
+                    MembershipTypeId = 3,
                     HasNewsletterSubscribed = true,
-                    MembershipTypeId = 3
+                    Name = "Roman",
+                },
+                new Customer
+                {
+                    Birthdate = DateTime.Now.AddYears(-20),
+                    MembershipTypeId = 1,
+                    HasNewsletterSubscribed = false,
+                    Name = "Kate",
+                },
+                new Customer
+                {
+                    Birthdate = DateTime.Now.AddYears(-18),
+                    MembershipTypeId = 2,
+                    HasNewsletterSubscribed = true,
+                    Name = "Paul",
                 }
             );
             context.SaveChanges();

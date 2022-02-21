@@ -17,7 +17,8 @@ namespace LibApp.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
-                });
+                }
+            );
             migrationBuilder.Sql("SET IDENTITY_INSERT Customers OFF");
         }
 
