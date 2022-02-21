@@ -22,6 +22,7 @@ namespace LibApp
                 var services = scope.ServiceProvider;
 
                 SeedData.Initialize(services);
+                SeedCustomers.Initialize(services);
             }
 
             host.Run();

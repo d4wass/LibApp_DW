@@ -18,7 +18,7 @@ namespace LibApp.Data.Migrations
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
                 });
-            migrationBuilder.Sql("SET IDENTITY_INSERT Customers ON");
+            migrationBuilder.Sql("SET IDENTITY_INSERT Customers OFF");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

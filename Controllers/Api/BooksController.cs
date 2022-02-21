@@ -4,13 +4,11 @@ using LibApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 
 using LibApp.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
@@ -56,7 +54,6 @@ namespace LibApp.Controllers.Api
         
         //POST /api/books/{id}
         [HttpPost]
-        [System.Web.Http.Authorize(Roles = "Owner,StoreManager")]
 
         public BookDto CreateBook(BookDto bookDto)
         {
@@ -75,7 +72,6 @@ namespace LibApp.Controllers.Api
         
         //PUT /api/books/{id}
         [HttpPut("{id:int}")]
-        [System.Web.Http.Authorize(Roles = "Owner,StoreManager")]
         public void UpdateBook(int id, BookDto bookDto)
         {
             if (!ModelState.IsValid)
@@ -92,9 +88,8 @@ namespace LibApp.Controllers.Api
             _mapper.Map(bookDto, bookInDb);
             _bookRepository.Save();
         }
-
+        [Authorize(Roles="Owner, StoreManager")]
         [HttpDelete("{id:int}")]
-        [System.Web.Http.Authorize(Roles = "Owner,StoreManager")]
         public void DeleteBook(int id)
         {
             var bookInDb = _bookRepository.GetBookById(id);

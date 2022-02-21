@@ -4,12 +4,11 @@
 }
 
 <h2>Books</h2>
-@if (!User.IsInRole("User"))
-{
+
     <p>
         <a class="btn btn-primary" asp-action="New">New Book</a>
     </p>
-}
+
 
 <table id="books" class="table table-hover">
     <thead>
@@ -28,6 +27,8 @@
 @section Scripts
 {
     <script>
+        var userRole = '@(User.IsInRole("User") ? "true" : "false")'
+        
         $(document).ready(function () {
             $("#books").DataTable({
                 ajax: {
@@ -47,11 +48,53 @@
                     },
                     {
                         render: function (data, type, book) {
-                            return `<a href="books/details/${book.id}">details</a>`
+                            const details = `<a href="books/details/${book.id}" style="margin-right: 20px">details</a>`
+                            const deleteBtn = `<button class="btn btn-danger js-delete" data-book-id="${book.id}">delete</button>`
+                            return details + deleteBtn
+                            // if (userRole === "true"){
+                            //     return details
+                            // } else {
+                            //     return details + deleteBtn
+                            // }
+                                
                         }
                     }
                 ]
             });
         });
     </script>
+    <script>
+            $(document).ready(function () {
+    
+                var table = $("#books").DataTable();
+                $("#books").on("click", ".js-delete", function () {
+    
+                    var button = $(this);
+                    bootbox.confirm({
+                        message: "Confirm customer deletion?",
+                        buttons: {
+                            confirm: {
+                                label: 'Yes',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: 'No',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/books/" + button.attr("data-book-id"),
+                                    method: "DELETE",
+                                    success: function () {
+                                        table.row(button.parents("tr")).remove().draw();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
 }

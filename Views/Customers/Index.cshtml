@@ -1,10 +1,10 @@
+
 @{
     ViewBag.Title = "Customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Customers</h2>
-
 <p>
     <a class="btn btn-primary" asp-action="New">New Customer</a>
 </p>
@@ -55,7 +55,6 @@
     </script>
     <script>
         $(document).ready(function () {
-
             var table = $("#customers").DataTable();
             $("#customers").on("click", ".js-delete", function () {
 

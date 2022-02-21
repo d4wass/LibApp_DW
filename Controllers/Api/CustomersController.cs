@@ -9,19 +9,15 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
-
+using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 
 namespace LibApp.Controllers.Api
 {
-    [AuthorizeAttribute.Authorize(Roles = "Owner,StoreManager")]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
@@ -34,7 +30,6 @@ namespace LibApp.Controllers.Api
 
         // GET /api/customers
         [HttpGet]
-        [AuthorizeAttribute.Authorize]
         public IActionResult GetCustomers()
         {
             var customers = _context.Customers
@@ -72,6 +67,7 @@ namespace LibApp.Controllers.Api
         
         // POST /api/customers
         [HttpPost]
+        [Authorize(Roles = "Owner")]
         public CustomerDto CreateCustomer(CustomerDto customerDto)
         {
             if (!ModelState.IsValid)
@@ -89,6 +85,7 @@ namespace LibApp.Controllers.Api
 
         // PUT /api/customers/{id}
         [HttpPut("{id}")]
+        [Authorize(Roles = "Owner")]
         public void UpdateCustomer(int id, CustomerDto customerDto)
         {
             if (!ModelState.IsValid)
@@ -108,6 +105,7 @@ namespace LibApp.Controllers.Api
 
         // DELETE /api/customers
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Owner")]
         public void DeleteCustomer(int id)
         {
             var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
@@ -120,7 +118,7 @@ namespace LibApp.Controllers.Api
             _context.SaveChanges();
         }
 
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
     }
 }

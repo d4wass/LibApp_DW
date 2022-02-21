@@ -37,7 +37,7 @@ namespace LibApp.Controllers
 
             return View(book);
         }
-        [Authorize(Roles = "Owner,StoreManager")]
+        [Authorize(Roles = "Owner, StoreManager")]
         public IActionResult Edit(int id)
         {
             var book = _bookRepository.GetBooks().SingleOrDefault(b => b.Id == id);
@@ -54,7 +54,7 @@ namespace LibApp.Controllers
 
             return View("BookForm", viewModel);
         }
-
+        [Authorize(Roles = "Owner, StoreManager")]
         public IActionResult New()
         {
             var genres = _genresRepository.GetGenres().ToList();

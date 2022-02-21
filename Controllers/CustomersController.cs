@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Web.Http;
 using LibApp.Models;
 using LibApp.ViewModels;
 using LibApp.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 
 namespace LibApp.Controllers
 {
-    [Authorize(Roles = "Owner,StoreManager")]
+    [Authorize(Roles = "Owner, StoreManager")]
     public class CustomersController : Controller
     {
         private readonly ICustomerRepository _customerRepository;
@@ -19,7 +20,6 @@ namespace LibApp.Controllers
             _membershipRepository = membershipRepository;
         }
         
-        [Authorize(Roles = "Owner,StoreManager")]
         public ViewResult Index()
         {          
             return View();
@@ -37,7 +37,7 @@ namespace LibApp.Controllers
 
             return View(customer);
         }
-
+        
         [Authorize(Roles = "Owner")]
         public IActionResult New()
         {
@@ -67,9 +67,8 @@ namespace LibApp.Controllers
             return View("CustomerForm", viewModel);
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Owner")]
+        [HttpPost]
         public IActionResult Save(Customer customer)
         {
             if (!ModelState.IsValid)
