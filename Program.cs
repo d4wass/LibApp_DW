@@ -23,6 +23,7 @@ namespace LibApp
 
                 SeedData.Initialize(services);
                 SeedCustomers.Initialize(services);
+                SeedBooks.Initialize(services);
             }
 
             host.Run();
